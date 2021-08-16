@@ -33,7 +33,7 @@ class LabelProc():
         # ic(label)
         if self.type == "binary":
             suml = self.func(label)
-            if suml > self.threshold:
+            if suml >= self.threshold:
                 return 1
             else:
                 return 0
@@ -52,6 +52,26 @@ class LabelProc():
             elif label_ver > self.threshold:
                 ver = 1
             return lks, fus, com, ver
+
+        elif self.type == "lks":
+            suml = self.func(label[:4])
+            if suml >= self.threshold:
+                return 1
+            else:
+                return 0
+        elif self.type == "lks-head":
+            suml = self.func(label[:2])
+            if suml >= self.threshold:
+                return 1
+            else:
+                return 0
+        elif self.type == "lks-mid":
+            suml = label[2]
+            if suml >= self.threshold:
+                return 1
+            else:
+                return 0
+
 
 
 def trans():
@@ -111,8 +131,8 @@ if __name__ == '__main__':
     output.mkdir(exist_ok=True)
     transform = trans()
     transform = None
-    labelproc = LabelProc(ty="binary", threshold=3, func=sum)
-    dataset = SalmonDataset("pre_load1.pk", labelproc, transform=transform)
+    labelproc = LabelProc(ty="lks", threshold=1, func=sum)
+    dataset = SalmonDataset("pre_load_150x600.pk", labelproc, transform=transform)
     # for i in range(len(dataset)):
     #     sample = dataset[i]
     #     ic(sample[1])

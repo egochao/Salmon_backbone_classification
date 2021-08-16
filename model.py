@@ -9,11 +9,19 @@ class SalBinary(nn.Module):
         super(SalBinary, self).__init__()
         self.classes = ["False", "True"]
         self.model = model
-        self.dense = nn.Linear(1000, 2)
+
+        self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
+
+        self.dense = nn.Linear(60, 2)
         self.softmax = nn.Softmax(dim=1)
 
     def forward(self, inp):
         x = self.model(inp)
+        # print(x.size())
+        # x = self.avgpool(x)
+        # print(x.size())
+        x = torch.flatten(x, 1)
+        # print(x.size())
         x = self.dense(x)
         x = self.softmax(x)
         return x
